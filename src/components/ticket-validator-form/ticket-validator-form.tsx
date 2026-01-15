@@ -40,7 +40,7 @@ export default function TicketValidatorForm({verifyTicket}:TicketValidatorFormPr
                     autoFocus={false}
                     placeholder="Enter ticket code"
                     value={ticketCode}
-                    onChange={(e) => setTicketCode(e.target.value.toUpperCase())}
+                    onChange={(e) => setTicketCode(e.target.value)}
                     disabled={isVerifying}
                     ref={inputRef}
                     className="text-center bg-white rounded-md w-full tracking-wide text-lg"
