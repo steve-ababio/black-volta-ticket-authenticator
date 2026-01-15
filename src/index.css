@@ -206,4 +206,35 @@
       @apply bg-[#1c1d1d] text-primary-foreground border-[#1c1d1d];
     }
   }
+  .anim-pulse {
+    height: 70px;
+    width: 70px;
+    z-index: 10;
+  }
+  
+  .anim-pulse::before, .anim-pulse::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: -1;
+    background-color: white;
+    opacity: 0.7;
+  }
+  
+  .anim-pulse::before {
+    animation: animpulse 1s ease-in-out infinite;
+  }
+  
+  .anim-pulse::after {
+    animation: animpulse 2s 1s ease-in-out infinite;
+  }
+  
+  @keyframes animpulse {
+    100% {
+      transform: scale(2.0);
+      opacity: 0;
+    }
+  }
   

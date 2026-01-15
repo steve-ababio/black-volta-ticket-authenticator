@@ -9,4 +9,8 @@ export const AuthService = {
     const res = await axios.post("/api/auth/register", { email, password });
     return res.data;
   },
+  getToken: async(refreshToken: string) =>{
+    const res = await axios.post("/api/auth/refresh-token", { refreshToken });
+    return res.data;
+  }
 };

@@ -7,23 +7,36 @@ import Event from "./pages/events/page";
 import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./context/authContext";
 import Login from "./pages/login/page";
+import PulseLoader from "./components/loader/loader";
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated,isLoading } = useAuth();
-  if (isLoading) return null;
+    if (isLoading) {
+      return (
+        <div className="h-screen bg-black w-full flex items-center justify-center">
+          <PulseLoader />
+        </div>
+      )
+    }
     if (!isAuthenticated) {
       return <Navigate to="/" replace />;
     }
     return <>{children}</>;
   };
   const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-    const { isAuthenticated, role } = useAuth();
-    
+    const { isAuthenticated, role,isLoading } = useAuth();
+    if (isLoading) {
+        return (
+          <div className="h-screen w-full  bg-black flex items-center justify-center">
+            <PulseLoader />
+          </div>
+        )
+    }
     if (isAuthenticated && role === "admin") {
-      return <Navigate to="/events" replace />;
+        return <Navigate to="/events" replace />;
     }
     return <>{children}</>;
   };
-  
+
 const queryClient = new QueryClient();
 
 const App = () => (
