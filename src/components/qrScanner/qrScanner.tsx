@@ -171,14 +171,14 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		navigator.vibrate?.(400);   
 	}
 	async function verifyQrCode(data: string) {
-		const unserializedData = JSON.parse(data);
+		
 		const payload:TicketData = {
 			qr_code_data:data,
 			check_in_location:eventLocation,
 			notes: "",
 			event_id:eventId
 		}
-		const staffId = JSON.parse(localStorage.getItem("ticketverify_auth") as string);
+		// const staffId = JSON.parse(localStorage.getItem("ticketverify_auth") as string);
 		
 		try {
 			const result = await checkIn(payload);
@@ -193,8 +193,9 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 			// 	location: eventLocation,
 			// 	offline: !navigator.onLine,
 			// });
-			console.log("data:",unserializedData);
-			setScannedData(unserializedData.ticket_number);
+			// const unserializedData = JSON.parse(data);
+			// console.log("unserialized data:",unserializedData);
+			setScannedData(data);
 			stopScanner();
 		} catch (error: unknown) {
 			playFailureSound();
