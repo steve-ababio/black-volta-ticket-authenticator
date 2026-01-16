@@ -16,9 +16,7 @@ interface DateSelectorProps {
 
 const DateSelector = ({ selectedDate, onDateChange }: DateSelectorProps) => {
   const [startDate, setStartDate] = useState(new Date());
-
   const dates = Array.from({ length: 7 }, (_, i) => addDays(startDate, i));
-
   const handlePrevWeek = () => {
     setStartDate(addDays(startDate, -7));
   };

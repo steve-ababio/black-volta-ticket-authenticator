@@ -23,6 +23,14 @@ export const setTokens = (accessToken: string, refreshToken: string) => {
       hour12: true,
     }).format(new Date(date));
   }
+  export function formatDate(date: Date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    
+    const formatted = `${yyyy}-${mm}-${dd}`;
+    return formatted;
+  }
 
   export function logScanAudit(entry: ScanAuditLog) {
     const logs = JSON.parse(localStorage.getItem("scan-audit") || "[]");

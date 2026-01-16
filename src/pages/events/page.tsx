@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { format, isToday, isSameDay, parseISO, addDays } from "date-fns";
+import { format, isToday, addDays } from "date-fns";
 import { LogOut, User } from "lucide-react";
 import DateSelector from "@/components/dateSelector/dateSelector";
 import EventCard, { EventCardProps } from "@/components/eventCard/eventCard";
 import { useAuth } from "@/context/authContext";
 import { EventService } from "@/services/event.service";
 import { BvEvent } from "@/common/types/types";
-import { formatTime } from "@/utils/utils";
+import { formatDate, formatTime } from "@/utils/utils";
 import { OfflineQueueStats } from "@/components/offiline-queue-stats/offline-queue-stats";
 import { useOfflineCheckInQueue } from "@/hooks/use-offline-check-in-queue";
 
@@ -22,8 +22,10 @@ const Event = () => {
      fetchEvents();
   },[selectedDate])
 
-  async function fetchEvents(){
-    const response = await EventService.getEvents(selectedDate);
+  async function fetchEvents() {
+    const startDate = formatDate(selectedDate);
+    const endDate = formatDate(addDays(selectedDate, 1));
+    const response = await EventService.getEvents(startDate,endDate);
     const events = response.data.events as BvEvent[];
 
     const result = events.map(event=>({
