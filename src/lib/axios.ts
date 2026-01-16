@@ -1,9 +1,6 @@
-"use client";
-
 import axios from "axios";
-
 const api = axios.create({
-  baseURL: "https://blac-volta-api.stakcloud.com",
+  baseURL: "https://api.blacvolta.com/",
   withCredentials: true,
   timeout: 45000,
 });
