@@ -346,10 +346,10 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
               <h3 className="text-lg font-semibold text-foreground font-display">Invalid Ticket</h3>
               <p className="text-sm text-muted-foreground mt-1">{verified.reason}</p>
             </div>
-            <div className="bg-muted rounded-lg p-3">
+            {/* <div className="bg-muted rounded-lg p-3">
               <p className="text-base text-muted-foreground">Ticket Code:  <span className="font-mono font-medium text-sm text-foreground truncate">{scannedData}</span></p>
              
-            </div>
+            </div> */}
             <div className="flex gap-2 pt-2">
               <Button variant="outline" onClick={handleScanAgain} className="flex-1">
                 Try Again
