@@ -35,7 +35,7 @@ export function EventsSkeleton() {
               {/* Image skeleton */}
               <div
                 className="
-                  relative h-[220px]
+                  relative h-[360px]
                   bg-[linear-gradient(100deg,#e5e7eb_40%,#f3f4f6_50%,#e5e7eb_60%)]
                   bg-[length:200%_100%]
                   animate-[shimmer_1.4s_linear_infinite]
