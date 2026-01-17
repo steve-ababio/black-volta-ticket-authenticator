@@ -39,7 +39,7 @@ const Event = () => {
         title: event.title,
         image: event.cover_image.value,
         date: event.start_date,
-        time: formatTime(event.start_date),
+        time: formatTime(event.start_date,event.timezone),
         venue: event.location ? event.location.name : "",
         category: event.category,
       }));

@@ -16,13 +16,24 @@ export const setTokens = (accessToken: string, refreshToken: string) => {
     localStorage.removeItem('refreshToken');
   };
 
-  export function formatTime(date: string | Date): string {
+  export function formatTime(
+    date: string | Date,
+    timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone
+  ): string {
+    const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  
+    if (isNaN(parsedDate.getTime())) {
+      return '';
+    }
+  
     return new Intl.DateTimeFormat('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
-    }).format(new Date(date));
+      timeZone: timezone,
+    }).format(parsedDate);
   }
+  
   export function formatDate(date: Date) {
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
