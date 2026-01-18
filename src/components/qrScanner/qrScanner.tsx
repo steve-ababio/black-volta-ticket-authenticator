@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Camera, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { ScanQrCode, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import TicketValidatorForm from "../ticket-validator-form/ticket-validator-form";
 import { TicketVerificationService } from "@/services/verification.service";
 import { toast } from "sonner";
@@ -281,7 +281,7 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
       <DialogContent className=" h-full md:h-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-display">
-            <Camera className="w-5 h-5 text-[@1c1d1d]" />
+            <ScanQrCode className="w-5 h-5 text-[@1c1d1d]" />
             Verify Ticket
           </DialogTitle>
         </DialogHeader>
