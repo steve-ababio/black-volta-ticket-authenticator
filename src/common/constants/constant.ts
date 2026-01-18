@@ -7,6 +7,7 @@ export const STATUS_CODES = {
     INTERNAL_SERVER:500,
     FORBIDDEN:403,
     PAYMENT:402,
+    BAD_REQUEST:400,
     NOT_FOUND:404
 }
 

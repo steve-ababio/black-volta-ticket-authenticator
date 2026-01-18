@@ -22,8 +22,9 @@ const Login = () => {
             toast.error(ERROR_MESSAGES.ADMIN_ONLY);
         }
     }catch(error){
+        console.log("login: error",error);
         if(error instanceof AxiosError){
-            if(error.status === STATUS_CODES.UNAUTHORIZED){
+            if(error.status === STATUS_CODES.UNAUTHORIZED || error.status === STATUS_CODES.BAD_REQUEST){
                 toast.error(ERROR_MESSAGES.INVALID_CREDENTIALS);
                 return;
             }
