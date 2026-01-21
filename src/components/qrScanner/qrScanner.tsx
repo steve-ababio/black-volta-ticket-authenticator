@@ -88,7 +88,7 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 			},
 			(decodedText) => {
 				if (!qrLock.canProcess(decodedText)) return;
-				verifyQrCode(decodedText);
+				verifyTicket(decodedText);
 			},
 			() => {
 			// Ignore scan errors (no QR found yet)
@@ -170,36 +170,28 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		failureBeepRef?.play().catch(() => {});
 		navigator.vibrate?.(400);   
 	}
-	async function verifyQrCode(data: string) {
+	async function verifyTicket(data: string) {
 		
+		// const payload:TicketData = {
+		// 	qr_code_data:data,
+		// 	check_in_location:eventLocation,
+		// 	notes: "",
+		// 	event_id:eventId
+		// }
 		const payload:TicketData = {
-			qr_code_data:data,
+			ticket_number:data,
 			check_in_location:eventLocation,
 			notes: "",
 			event_id:eventId
 		}
-		// const staffId = JSON.parse(localStorage.getItem("ticketverify_auth") as string);
 		
 		try {
 			const result = await checkIn(payload);
 			setVerified(result);
-			// logScanAudit({
-			// 	staffId: staffId,
-			// 	ticketRef: data,
-			// 	method: "qr",
-			// 	result: verified.valid ? "success" : "error",
-			// 	reason: verified.reason,
-			// 	timestamp: Date.now(),
-			// 	location: eventLocation,
-			// 	offline: !navigator.onLine,
-			// });
-			// const unserializedData = JSON.parse(data);
-			// console.log("unserialized data:",unserializedData);
 			setScannedData(data);
 			stopScanner();
 		} catch (error: unknown) {
 			playFailureSound();
-			
 			const isNetworkFailure = error instanceof AxiosError && error.code === "ERR_NETWORK";
 			const isOffline = !navigator.onLine || isNetworkFailure;
 			
@@ -241,27 +233,27 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		  }
 		  
   	}
-	async function verifyTicketCode(data: string) {
-		const payload:TicketData = {
-			ticket_number:data,
-			check_in_location:eventLocation,
-			notes: "",
-			event_id:eventId
-		}
-		try {
-			const result = await checkIn(payload);
-			setVerified(result);
-			setScannedData(data);
-			stopScanner();
-		} catch (error) {
-			playFailureSound();
-			if (error instanceof AxiosError) {
-				const message = error.response.data.message;
-				const secondaryMessage = error.response.data.errors.ticket_number[0].message;
-				toast.error(`${message}: ${secondaryMessage}`);
-			}
-		}
-  	}
+	// async function verifyTicketCode(data: string) {
+	// 	const payload:TicketData = {
+	// 		ticket_number:data,
+	// 		check_in_location:eventLocation,
+	// 		notes: "",
+	// 		event_id:eventId
+	// 	}
+	// 	try {
+	// 		const result = await checkIn(payload);
+	// 		setVerified(result);
+	// 		setScannedData(data);
+	// 		stopScanner();
+	// 	} catch (error) {
+	// 		playFailureSound();
+	// 		if (error instanceof AxiosError) {
+	// 			const message = error.response.data.message;
+	// 			const secondaryMessage = error.response.data.errors.ticket_number[0].message;
+	// 			toast.error(`${message}: ${secondaryMessage}`);
+	// 		}
+	// 	}
+  	// }
 	const handleClose = () => {
 		qrLock.reset();
 		stopScanner();
@@ -360,7 +352,7 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
             </div>
           </div>
         )}
-        <TicketValidatorForm verifyTicket={verifyTicketCode} isScanning={status === "scanning"} scanStatus={status} />
+        <TicketValidatorForm verifyTicket={verifyTicket} isScanning={status === "scanning"} scanStatus={status} />
       </DialogContent>
     </Dialog>
   );

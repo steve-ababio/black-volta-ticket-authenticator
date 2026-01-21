@@ -19,7 +19,6 @@ export default function TicketValidatorForm({verifyTicket}:TicketValidatorFormPr
             setIsVerifying(false);
         }
     }
-
     useEffect(() => {
         const id = requestAnimationFrame(() => {
           inputRef.current?.blur();
