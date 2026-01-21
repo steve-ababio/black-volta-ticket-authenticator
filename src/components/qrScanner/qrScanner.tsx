@@ -206,20 +206,9 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 			if (error instanceof AxiosError) {
 				qrLock.reset();
 			  	const data = error.response?.data;
-		  
-			  	const primaryMessage =
-				data?.message ?? "Ticket verification failed";
-		  
-			  	const secondaryMessage =
-				data?.errors?.ticket_number?.[0]?.message ??
-				data?.errors?.ticket_number ??
-				data?.error;
-		  
-				toast.error(
-					secondaryMessage
-					? `${primaryMessage}: ${secondaryMessage}`
-					: primaryMessage
-				);
+				const errorField = Object.keys(data?.errors)[0];
+				const message = getFieldError(data?.errors, errorField) ?? data?.error;
+				toast.error(message);
 		  
 			  	return;
 			}
@@ -233,6 +222,13 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		  }
 		  
   	}
+	  function getFieldError(
+		errors: any,
+		field: string
+	  ): string | null {
+		return errors?.[field]?.[0]?.message ?? null;
+	  }
+	  
 	// async function verifyTicketCode(data: string) {
 	// 	const payload:TicketData = {
 	// 		ticket_number:data,
