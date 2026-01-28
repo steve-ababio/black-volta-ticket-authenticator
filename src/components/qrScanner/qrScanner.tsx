@@ -79,25 +79,31 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		const scanner = new Html5Qrcode("qr-reader");
 		scannerRef.current = scanner;
 
-		await scanner.start(
-			{ facingMode: "environment" },
-			{
+		const cameras = await Html5Qrcode.getCameras()
+		console.log("cameras:",cameras)
+		Html5Qrcode.getCameras().then(async devices => {
+			const telephotoCamera = devices.find(device =>
+			  device.label.toLowerCase().includes("camera 0")
+			);
+			await scanner.start(
+			  telephotoCamera!.id,
+			  {
 				fps: 10,
 				qrbox: { width: 230, height: 330 },
-  				disableFlip: true,
-			},
-			(decodedText) => {
-				if (!qrLock.canProcess(decodedText)) return;
-				verifyTicket(JSON.parse(decodedText as string));
-			},
-			() => {
-			// Ignore scan errors (no QR found yet)
-			}
-		);
+			  },
+			  (decodedText) => {
+					if (!qrLock.canProcess(decodedText)) return;
+					verifyTicket(JSON.parse(decodedText as string));
+				},
+				() => {
+					// Ignore scan errors (no QR found yet)
+				}
+			);
+		  });
 		} catch (err) {
 			toast.error("Failed to start scanner");
-		console.error("Failed to start scanner:", err);
-		} finally {
+			console.error("Failed to start scanner:", err);
+		}finally {
 			setIsStarting(false);
 		}
 	};
