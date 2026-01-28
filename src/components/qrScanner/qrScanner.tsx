@@ -174,14 +174,14 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		let payload!:TicketData;
 		if(typeof data === "string"){
 			 payload = {
-				ticket_number:data,
+				ticket_number:data.toUpperCase(),
 				check_in_location:eventLocation,
 				notes: "",
 				event_id:eventId
 			}
 		}else if(typeof data === "object"){
 			payload = {
-				ticket_number:data.ticket_number,
+				ticket_number:data.ticket_number.toUpperCase(),
 				check_in_location:eventLocation,
 				notes: "",
 				event_id:eventId
