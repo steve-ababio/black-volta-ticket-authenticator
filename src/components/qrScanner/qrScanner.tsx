@@ -15,8 +15,6 @@ import { Ticket, TicketData, TicketResponse, TicketVerificationResult } from "@/
 import { AxiosError } from "axios";
 import { useQrScannerLock } from "@/hooks/use-qr-scanner-lock";
 import { useOfflineCheckInQueue } from "@/hooks/use-offline-check-in-queue";
-import { logScanAudit } from "@/utils/utils";
-import OfflineQueueView from "../offline-queue-view/offline-queue-view";
 
 interface QRScannerProps {
   open: boolean;
@@ -79,31 +77,25 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		const scanner = new Html5Qrcode("qr-reader");
 		scannerRef.current = scanner;
 
-		const cameras = await Html5Qrcode.getCameras()
-		console.log("cameras:",cameras)
-		Html5Qrcode.getCameras().then(async devices => {
-			const telephotoCamera = devices.find(device =>
-			  device.label.toLowerCase().includes("camera 0")
-			);
-			await scanner.start(
-			  telephotoCamera!.id,
-			  {
+		await scanner.start(
+			{ facingMode: "environment" },
+			{
 				fps: 10,
 				qrbox: { width: 230, height: 330 },
-			  },
-			  (decodedText) => {
-					if (!qrLock.canProcess(decodedText)) return;
-					verifyTicket(JSON.parse(decodedText as string));
-				},
-				() => {
-					// Ignore scan errors (no QR found yet)
-				}
-			);
-		  });
+  				disableFlip: true,
+			},
+			(decodedText) => {
+				if (!qrLock.canProcess(decodedText)) return;
+				verifyTicket(JSON.parse(decodedText as string));
+			},
+			() => {
+			// Ignore scan errors (no QR found yet)
+			}
+		);
 		} catch (err) {
 			toast.error("Failed to start scanner");
-			console.error("Failed to start scanner:", err);
-		}finally {
+		console.error("Failed to start scanner:", err);
+		} finally {
 			setIsStarting(false);
 		}
 	};
