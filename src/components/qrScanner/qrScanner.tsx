@@ -11,7 +11,7 @@ import { ScanQrCode, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import TicketValidatorForm from "../ticket-validator-form/ticket-validator-form";
 import { TicketVerificationService } from "@/services/verification.service";
 import { toast } from "sonner";
-import { TicketData, TicketResponse, TicketVerificationResult } from "@/common/types/types";
+import { Ticket, TicketData, TicketResponse, TicketVerificationResult } from "@/common/types/types";
 import { AxiosError } from "axios";
 import { useQrScannerLock } from "@/hooks/use-qr-scanner-lock";
 import { useOfflineCheckInQueue } from "@/hooks/use-offline-check-in-queue";
@@ -29,7 +29,7 @@ type ScanStatus = "scanning" | "success" | "error";
 
 const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScannerProps) => {
 	const [status, setStatus] = useState<ScanStatus>("scanning");
-	const [scannedData, setScannedData] = useState<string>("");
+	const [scannedData, setScannedData] = useState<TicketResponse|string>("");
 	const {enqueue, sync } = useOfflineCheckInQueue();
 	const [verified,setVerified] = useState<TicketVerificationResult>();
 	const [isStarting, setIsStarting] = useState(false);
@@ -88,7 +88,7 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 			},
 			(decodedText) => {
 				if (!qrLock.canProcess(decodedText)) return;
-				verifyTicket(decodedText);
+				verifyTicket(JSON.parse(decodedText as string));
 			},
 			() => {
 			// Ignore scan errors (no QR found yet)
@@ -170,19 +170,22 @@ const QRScanner = ({ open, onClose, eventTitle,eventLocation,eventId }: QRScanne
 		failureBeepRef?.play().catch(() => {});
 		navigator.vibrate?.(400);   
 	}
-	async function verifyTicket(data: string) {
-		
-		// const payload:TicketData = {
-		// 	qr_code_data:data,
-		// 	check_in_location:eventLocation,
-		// 	notes: "",
-		// 	event_id:eventId
-		// }
-		const payload:TicketData = {
-			ticket_number:data,
-			check_in_location:eventLocation,
-			notes: "",
-			event_id:eventId
+	async function verifyTicket(data: TicketResponse|string) {
+		let payload!:TicketData;
+		if(typeof data === "string"){
+			 payload = {
+				ticket_number:data,
+				check_in_location:eventLocation,
+				notes: "",
+				event_id:eventId
+			}
+		}else if(typeof data === "object"){
+			payload = {
+				ticket_number:data.ticket_number,
+				check_in_location:eventLocation,
+				notes: "",
+				event_id:eventId
+			}
 		}
 		
 		try {
